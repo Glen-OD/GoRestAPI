@@ -1,22 +1,15 @@
-name: goTester
-
-on:
-  push:
-    branches:
-      - master
-
-jobs:
-  lint:
-    runs-on: ubuntu-18.04
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-go@v2
-        with:
-          stable: 'false'
-          go-version: '1.12.0'
-
-      - name: Lint
-        run: |
-          curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.26.0
-
-          golangci-lint run
+lint:
+  image: registry.hal.davecutting.uk/40233306/glengorestapi
+  stage: test
+  script:
+    # Use default .golangci.yml file from the image if one is not present in the project root.
+    - '[ -e .golangci.yml ] || cp /golangci/.golangci.yml .'
+    # Write the code coverage report to gl-code-quality-report.json
+    # and print linting issues to stdout in the format: path/to/file:line description
+    # remove `--issues-exit-code 0` or set to non-zero to fail the job if linting issues are detected
+    - golangci-lint run --issues-exit-code 0 --out-format code-climate | tee gl-code-quality-report.json | jq -r '.[] | "\(.location.path):\(.location.lines.begin) \(.description)"'
+  artifacts:
+    reports:
+      codequality: gl-code-quality-report.json
+    paths:
+      - gl-code-quality-report.json
