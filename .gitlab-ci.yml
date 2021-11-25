@@ -20,7 +20,7 @@ build-projectname:
   stage: build
   script:
     - glide install
-    - go build -o ${CI_PROJECT_DIR}/${ARTIFACTS_DIR}/${BIN_NAME}
+    - go build -o ${CI_PROJECT_DIR}/${ARTIFACTS_DIR}/${BIN_NAME} cmd/awesome-server/main.go
   artifacts:
     paths:
       - ${ARTIFACTS_DIR}
