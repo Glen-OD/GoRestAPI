@@ -12,14 +12,14 @@ stages:
 before_script:
   - mkdir -p ${GOPATH}/src/${GO_PROJECT}
   - mkdir -p ${CI_PROJECT_DIR}/${ARTIFACTS_DIR}
-  - go get -u github.com/golang/dep/cmd/dep
+  - go get -u github.com/Masterminds/glide
   - cp -r ${CI_PROJECT_DIR}/* ${GOPATH}/src/${GO_PROJECT}/
   - cd ${GOPATH}/src/${GO_PROJECT}
 
 build-projectname:
   stage: build
   script:
-    - dep ensure
+    - glide install
     - go build -o ${CI_PROJECT_DIR}/${ARTIFACTS_DIR}/${BIN_NAME}
   artifacts:
     paths:
@@ -28,5 +28,5 @@ build-projectname:
 test-projectname:
   stage: test
   script:
-    - dep ensure
+    - glide install
     - go test -v -cover ./...
