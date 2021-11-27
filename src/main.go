@@ -10,9 +10,8 @@ import (
 )
 
 type Article struct {
-	//Title   string `json:"Title"`
-	//Desc    string `json:"desc"`
-	Content string `json:"content"`
+	Key    string `json:"Key"`
+	answer string `json:"answer"`
 }
 
 type Articles []Article
@@ -20,7 +19,7 @@ type Articles []Article
 func allArticles(w http.ResponseWriter, r *http.Request) {
 	articles := Articles{
 		//Article{Title: "Test Title", Desc: "Test Description", Content: "Hello World"},
-		Article{Content: "Hello World"},
+		Article{answer: "Hello World"},
 	}
 
 	fmt.Println("Endpoint HitL All Articles Endpoint")
@@ -45,11 +44,20 @@ func homePage(w http.ResponseWriter, r *http.Request) {
 	numberOfCommas := strconv.Itoa(strings.Count(key, ","))
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(numberOfCommas)
+
+	//Data := []byte(`[
+	//    {"Name": key},
+	//    {"answer": numberOfCommas}
+	// ]`)
+
+	user := &Article{Key: key,
+		answer: numberOfCommas}
 	//fmt.Fprintf(w, "The number of commas is: "+string(numberOfCommas))
 	//fmt.Fprintf(w, "The sentence is: "+string(key))
 
 	//fmt.Fprintf(w, "Homepage Endpoint Hit")
+
+	json.NewEncoder(w).Encode(user.answer)
 }
 
 func handleRequests() {
