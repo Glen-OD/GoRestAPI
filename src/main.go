@@ -43,7 +43,10 @@ func homePage(w http.ResponseWriter, r *http.Request) {
 	//log.Println("the key is " + key)
 	//log.Println(strings.Count(key, ","))
 	numberOfCommas := strconv.Itoa(strings.Count(key, ","))
-	fmt.Fprintf(w, "The number of commas is: "+string(numberOfCommas))
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(numberOfCommas)
+	//fmt.Fprintf(w, "The number of commas is: "+string(numberOfCommas))
 	//fmt.Fprintf(w, "The sentence is: "+string(key))
 
 	//fmt.Fprintf(w, "Homepage Endpoint Hit")
