@@ -5,13 +5,12 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"strconv"
 	"strings"
 )
 
 type Article struct {
-	x      string `json:"x"`
-	answer string `json:"answer"`
+	X      string `json:"x"`
+	Answer int    `json:"answer"`
 }
 
 type Articles []Article
@@ -19,7 +18,7 @@ type Articles []Article
 func allArticles(w http.ResponseWriter, r *http.Request) {
 	articles := Articles{
 		//Article{Title: "Test Title", Desc: "Test Description", Content: "Hello World"},
-		Article{answer: "Hello World"},
+		//Article{answer: "Hello World"},
 	}
 
 	fmt.Println("Endpoint HitL All Articles Endpoint")
@@ -41,7 +40,8 @@ func homePage(w http.ResponseWriter, r *http.Request) {
 	//tester
 	//log.Println("the key is " + key)
 	//log.Println(strings.Count(key, ","))
-	answer := strconv.Itoa(strings.Count(x, ","))
+	//answer := strconv.Itoa(strings.Count(x, ","))
+	answer := strings.Count(x, ",")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Content-Type", "application/json")
 
@@ -50,14 +50,21 @@ func homePage(w http.ResponseWriter, r *http.Request) {
 	//    {"answer": numberOfCommas}
 	// ]`)
 
-	user := &Article{x: x,
-		answer: answer}
+	//	user := &Article{x: x,
+	//		answer: answer}
 	//fmt.Fprintf(w, "The number of commas is: "+string(numberOfCommas))
 	//fmt.Fprintf(w, "The sentence is: "+string(key))
 
 	//fmt.Fprintf(w, "Homepage Endpoint Hit")
 
-	json.NewEncoder(w).Encode(user)
+	foo_marshalled, err := json.Marshal(Article{X: x, Answer: answer})
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	fmt.Fprint(w, string(foo_marshalled))
+
+	//json.NewEncoder(w).Encode(user)
 }
 
 func handleRequests() {
