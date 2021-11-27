@@ -10,7 +10,7 @@ import (
 )
 
 type Article struct {
-	Key    string `json:"Key"`
+	x      string `json:"x"`
 	answer string `json:"answer"`
 }
 
@@ -36,12 +36,12 @@ func homePage(w http.ResponseWriter, r *http.Request) {
 
 	// Query()["key"] will return an array of items,
 	// we only want the single item.
-	key := keys[0]
+	x := keys[0]
 
 	//tester
 	//log.Println("the key is " + key)
 	//log.Println(strings.Count(key, ","))
-	numberOfCommas := strconv.Itoa(strings.Count(key, ","))
+	answer := strconv.Itoa(strings.Count(x, ","))
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Content-Type", "application/json")
 
@@ -50,14 +50,14 @@ func homePage(w http.ResponseWriter, r *http.Request) {
 	//    {"answer": numberOfCommas}
 	// ]`)
 
-	user := &Article{Key: key,
-		answer: numberOfCommas}
+	user := &Article{x: x,
+		answer: answer}
 	//fmt.Fprintf(w, "The number of commas is: "+string(numberOfCommas))
 	//fmt.Fprintf(w, "The sentence is: "+string(key))
 
 	//fmt.Fprintf(w, "Homepage Endpoint Hit")
 
-	json.NewEncoder(w).Encode(user.answer)
+	json.NewEncoder(w).Encode(user)
 }
 
 func handleRequests() {
