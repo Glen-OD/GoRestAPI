@@ -28,24 +28,44 @@ func allArticles(w http.ResponseWriter, r *http.Request) {
 func homePage(w http.ResponseWriter, r *http.Request) {
 	keys, ok := r.URL.Query()["key"]
 
+	var bHandle bool
+
 	if !ok || len(keys[0]) < 1 {
+		bHandle = true
 		//log.Println("Url Param 'key' is missing")
-		//return
+	}
+
+	if bHandle == true {
+		var x string = ""
+		answer := strings.Count(x, ",")
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Content-Type", "application/json")
+		user := &Article{X: x, Answer: answer}
+		json.NewEncoder(w).Encode(user)
+	}
+	if bHandle == false {
+		x := keys[0]
+		answer := strings.Count(x, ",")
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Content-Type", "application/json")
+		foo_marshalled, err := json.Marshal(Article{X: x, Answer: answer})
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		fmt.Fprint(w, string(foo_marshalled))
 	}
 
 	// Query()["key"] will return an array of items,
 	// we only want the single item.
-	x := keys[0]
 
 	//tester
 	//log.Println("the key is " + x)
 
 	//log.Println(strings.Count(key, ","))
 	//answer := strconv.Itoa(strings.Count(x, ","))
-	answer := strings.Count(x, ",")
+
 	//log.Println("the answer is " + strconv.Itoa(answer))
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Header().Set("Content-Type", "application/json")
 
 	//Data := []byte(`[
 	//    {"Name": key},
@@ -58,17 +78,6 @@ func homePage(w http.ResponseWriter, r *http.Request) {
 	//fmt.Fprintf(w, "The sentence is: "+string(key))
 
 	//fmt.Fprintf(w, "Homepage Endpoint Hit")
-
-	if len(x) < 1 {
-		x = ""
-	}
-
-	foo_marshalled, err := json.Marshal(Article{X: x, Answer: answer})
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	fmt.Fprint(w, string(foo_marshalled))
 
 	//json.NewEncoder(w).Encode(user)
 }
