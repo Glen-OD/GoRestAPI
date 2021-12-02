@@ -30,7 +30,7 @@ func homePage(w http.ResponseWriter, r *http.Request) {
 
 	if !ok || len(keys[0]) < 1 {
 		//log.Println("Url Param 'key' is missing")
-		return
+		//return
 	}
 
 	// Query()["key"] will return an array of items,
@@ -38,10 +38,12 @@ func homePage(w http.ResponseWriter, r *http.Request) {
 	x := keys[0]
 
 	//tester
-	//log.Println("the key is " + key)
+	//log.Println("the key is " + x)
+
 	//log.Println(strings.Count(key, ","))
 	//answer := strconv.Itoa(strings.Count(x, ","))
 	answer := strings.Count(x, ",")
+	//log.Println("the answer is " + strconv.Itoa(answer))
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Content-Type", "application/json")
 
@@ -56,6 +58,10 @@ func homePage(w http.ResponseWriter, r *http.Request) {
 	//fmt.Fprintf(w, "The sentence is: "+string(key))
 
 	//fmt.Fprintf(w, "Homepage Endpoint Hit")
+
+	if len(x) < 1 {
+		x = ""
+	}
 
 	foo_marshalled, err := json.Marshal(Article{X: x, Answer: answer})
 	if err != nil {
